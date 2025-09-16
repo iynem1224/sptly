@@ -9,6 +9,6 @@ Clone the repo and build:
 ```bash
 git clone https://github.com/iynem1224/sptly.git
 cd sptly
-go build -o sptly
+go build -o sptly ./cmd
 ```
 Press q or Ctrl+C to quit.
