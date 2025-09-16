@@ -36,21 +36,22 @@ func main() {
 		return
 	}
 
-	token := cfg.AccessToken
-	tokenExpiry := time.Now().Add(10 * time.Minute) // refresh every 10 min
+	token := ""               // start empty
+	tokenExpiry := time.Now() // force refresh immediately
 
 	go func() {
 		lastIndex := -1
 		for {
-			// Refresh token if it's time
-			if time.Now().After(tokenExpiry) {
+			// Refresh token if it's expired or first launch
+			if token == "" || time.Now().After(tokenExpiry) {
 				t, err := lyrics.GetAccessToken(client, cfg.ClientID, cfg.ClientSecret, cfg.RefreshToken)
 				if err != nil {
-					time.Sleep(500 * time.Millisecond)
+					fmt.Println("Failed to refresh token:", err)
+					time.Sleep(time.Second)
 					continue
 				}
 				token = t
-				tokenExpiry = time.Now().Add(10 * time.Minute) // reset 10-min interval
+				tokenExpiry = time.Now().Add(5 * time.Minute) // refresh every 5 min
 			}
 
 			track, err := lyrics.GetCurrentlyPlaying(client, token)

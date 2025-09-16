@@ -2,7 +2,9 @@
 
 Sptly is a terminal-based lyrics viewer for Spotify that fetches synced lyrics in real time. 
 
-![Demo](demo.gif)
+<p align="center">
+  <img src="demo.gif" alt="Demo">
+</p>
 
 ## Installation
 Clone the repo and build:
@@ -11,4 +13,3 @@ git clone https://github.com/iynem1224/sptly.git
 cd sptly
 go build -o sptly ./cmd
 ```
-Press q or Ctrl+C to quit.
