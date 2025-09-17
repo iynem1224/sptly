@@ -153,11 +153,16 @@ func FetchLyrics(track, artist, album string, durationSec int) ([]LRCLine, strin
 			}
 
 			parsed := ParseSyncedLyrics(r.SyncedLyrics)
-			for i := range parsed {
-				if strings.TrimSpace(parsed[i].Text) == "" {
+
+			// Replace empty lines between lyrics with "♪"
+			for i := 1; i < len(parsed)-1; i++ {
+				if strings.TrimSpace(parsed[i].Text) == "" &&
+					strings.TrimSpace(parsed[i-1].Text) != "" &&
+					strings.TrimSpace(parsed[i+1].Text) != "" {
 					parsed[i].Text = "♪"
 				}
 			}
+
 			return parsed, searchURL, nil
 		}
 	}
@@ -168,13 +173,17 @@ func FetchLyrics(track, artist, album string, durationSec int) ([]LRCLine, strin
 			strings.EqualFold(r.TrackName, track) &&
 			strings.EqualFold(r.ArtistName, artist) {
 
+			rawLines := strings.Split(r.PlainLyrics, "\n")
 			lines := []LRCLine{}
-			for _, line := range strings.Split(r.PlainLyrics, "\n") {
-				if strings.TrimSpace(line) == "" {
+
+			for i, line := range rawLines {
+				if strings.TrimSpace(line) == "" && i > 0 && i < len(rawLines)-1 &&
+					strings.TrimSpace(rawLines[i-1]) != "" && strings.TrimSpace(rawLines[i+1]) != "" {
 					line = "♪"
 				}
 				lines = append(lines, LRCLine{Text: line})
 			}
+
 			return lines, searchURL, nil
 		}
 	}
