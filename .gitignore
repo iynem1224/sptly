@@ -8,3 +8,6 @@
 # VSCode / IDE
 .vscode/
 .idea/
+
+# binary
+sptly
